@@ -1,0 +1,43 @@
+services:
+  db:
+    image: bitnami/postgresql:16.3.0-debian-12-r19
+    restart: always
+    environment:
+      POSTGRESQL_USERNAME: henrychou
+      POSTGRESQL_PASSWORD: root123
+      POSTGRESQL_POSTGRES_PASSWORD: admin
+    healthcheck:
+      test: ['CMD-SHELL', 'pg_isready -U henrychou']
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    ports:
+      - '5432:5432'
+    volumes:
+      - ./local/volumes/postgresql_data:/bitnami/postgresql
+  
+  queue:
+    image: bitnami/rabbitmq:3.13.4-debian-12-r1
+    restart: always
+    environment:
+      - RABBITMQ_USERNAME=user
+      - RABBITMQ_PASSWORD=bitnami
+      - RABBITMQ_MANAGEMENT_ALLOW_WEB_ACCESS=true
+    ports:
+      - '15672:15672'
+  
+  cdc_mechanism:
+    image: quay.io/debezium/server:2.5
+    restart: always
+    healthcheck:
+      test: curl http://debezium:8080/q/health || exit 1
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - '8080:8080'
+    volumes:
+      - ./local/debezium_conf:/debezium/conf:readonly
