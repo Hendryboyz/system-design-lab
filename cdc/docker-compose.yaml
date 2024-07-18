@@ -25,10 +25,17 @@ services:
       - RABBITMQ_USERNAME=user
       - RABBITMQ_PASSWORD=bitnami
       - RABBITMQ_MANAGEMENT_ALLOW_WEB_ACCESS=true
+      # - RABBITMQ_DEFINITIONS_FILE=/app/load_definition.json
+    healthcheck:
+      test: rabbitmq-diagnostics -q ping
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 90s
     ports:
       - '15672:15672'
-    volumes:
-      - ./local/volumes/rabbitmq_data:/bitnami/rabbitmq/mnesia
+    # volumes:
+    #   - ./local/rabbitmq_conf/definitions.json:/app/load_definition.json
   
   cdc_mechanism:
     image: quay.io/debezium/server:2.5
@@ -40,6 +47,8 @@ services:
       retries: 5
     depends_on:
       db:
+        condition: service_healthy
+      queue:
         condition: service_healthy
     ports:
       - '8080:8080'
