@@ -6,6 +6,8 @@ services:
       POSTGRESQL_USERNAME: henrychou
       POSTGRESQL_PASSWORD: root123
       POSTGRESQL_POSTGRES_PASSWORD: admin
+      POSTGRESQL_DATABASE: dsebd-internal
+      POSTGRESQL_WAL_LEVEL: logical
     healthcheck:
       test: ['CMD-SHELL', 'pg_isready -U henrychou']
       interval: 5s
@@ -25,6 +27,8 @@ services:
       - RABBITMQ_MANAGEMENT_ALLOW_WEB_ACCESS=true
     ports:
       - '15672:15672'
+    volumes:
+      - ./local/volumes/rabbitmq_data:/bitnami/rabbitmq/mnesia
   
   cdc_mechanism:
     image: quay.io/debezium/server:2.5
