@@ -7,12 +7,16 @@ import { AppModule } from './app.module';
 const logger = new Logger('main');
 
 function enableSwagger(app: INestApplication, config: ConfigService) {
-  const docConfig = new DocumentBuilder()
+  const docBuilder = new DocumentBuilder()
     .setTitle('API Backend')
-    .setDescription('API description')
-    .addServer(config.get<string>('api.openAPI.basename'))
-    .build();
-  const document = SwaggerModule.createDocument(app, docConfig);
+    .setDescription('API description');
+
+  const openAPIBasename = config.get<string>('api.openAPI.basename');
+  if (openAPIBasename) {
+    docBuilder.addServer(openAPIBasename);
+  }
+
+  const document = SwaggerModule.createDocument(app, docBuilder.build());
 
   SwaggerModule.setup('docs', app, document, {
     swaggerOptions: {
@@ -27,6 +31,8 @@ function enableSwagger(app: INestApplication, config: ConfigService) {
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const configService = app.get(ConfigService);
+  const domainPrefix = configService.get<string>('app.domainPrefix');
+  app.setGlobalPrefix(`${domainPrefix ? domainPrefix + '/' : ''}api`);
   app.enableVersioning({
     type: VersioningType.URI,
   });
@@ -46,6 +52,9 @@ async function bootstrap() {
     logger.error('Unhandled Rejection at:', promise, 'reason:', reason);
   });
 
-  await app.listen(configService.get<number>('app.port'));
+  const appPort = configService.get<number>('app.port');
+  await app.listen(appPort, () => {
+    logger.log(`Application started at port: ${appPort}`);
+  });
 }
 bootstrap();
