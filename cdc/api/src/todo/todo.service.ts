@@ -2,8 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Todo } from './entities/todo.entities';
-import { CreateTodoDto } from './dto/create-todo.dto';
-import { UpdateTodoDto } from './dto/update-todo.dto';
+import { CreateTodoDto, UpdateTodoDto } from './dto/todo.dto';
 
 @Injectable()
 export class TodoService {
@@ -12,8 +11,12 @@ export class TodoService {
     private todoRepository: Repository<Todo>,
   ) {}
 
-  create(createTodoDto: CreateTodoDto) {
-    return 'This action adds a new todo';
+  create(userId: string, createTodoDto: CreateTodoDto) {
+    const newTodo = this.todoRepository.create({
+      userId,
+      content: createTodoDto.content,
+    });
+    return this.todoRepository.save(newTodo);
   }
 
   findAll() {
