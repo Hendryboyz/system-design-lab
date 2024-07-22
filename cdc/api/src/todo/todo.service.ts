@@ -1,4 +1,4 @@
-import { Injectable, NotImplementedException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Todo } from './entities/todo.entities';
@@ -45,9 +45,13 @@ export class TodoService {
     });
   }
 
-  update(userId: string, updateTodoDto: UpdateTodoDto): Promise<Todo> {
-    this.verifyUser(userId);
-    throw new NotImplementedException();
+  async update(userId: string, updateTodoDto: UpdateTodoDto): Promise<Todo> {
+    const existedTodo = await this.findItem(userId, updateTodoDto.itemId);
+    if (!existedTodo) {
+      throw new NotFoundException(`Todo item[${updateTodoDto.itemId}] not found.`);
+    }
+    existedTodo.content = updateTodoDto.content;
+    return await this.todoRepository.save(existedTodo);
   }
 
   async remove(userId: string, itemId: string): Promise<number> {
