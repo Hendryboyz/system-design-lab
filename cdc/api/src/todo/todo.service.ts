@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotImplementedException } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Todo } from './entities/todo.entities';
@@ -21,24 +21,41 @@ export class TodoService {
     });
     return this.todoRepository.save(newTodo);
   }
-  
+
   verifyUser(userId: string) {
     this.userService.getUser(userId);
   }
 
-  findAll() {
-    return `This action returns all todo`;
+  async listAll(userId: string): Promise<Todo[]> {
+    this.verifyUser(userId);
+    return await this.todoRepository.find({
+      where: {
+        userId
+      }
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} todo`;
+  async findItem(userId: string, itemId: string): Promise<Todo> {
+    this.verifyUser(userId);
+    return await this.todoRepository.findOne({
+      where: {
+        userId,
+        todoId: itemId,
+      }
+    });
   }
 
-  update(id: number, updateTodoDto: UpdateTodoDto) {
-    return `This action updates a #${id} todo`;
+  update(userId: string, updateTodoDto: UpdateTodoDto): Promise<Todo> {
+    this.verifyUser(userId);
+    throw new NotImplementedException();
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} todo`;
+  async remove(userId: string, itemId: string): Promise<number> {
+    this.verifyUser(userId);
+    const result = await this.todoRepository.delete({
+      userId: userId,
+      todoId: itemId,
+    });
+    return result.affected;
   }
 }

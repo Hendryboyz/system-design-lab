@@ -10,4 +10,9 @@ export class CreateTodoDto {
   content: string;
 }
 
-export class UpdateTodoDto extends PartialType(CreateTodoDto) {}
+export class UpdateTodoDto extends PartialType(CreateTodoDto) {
+  @ApiProperty()
+  @IsNotEmpty()
+  @IsString()
+  itemId: string;
+}

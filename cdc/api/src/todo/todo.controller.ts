@@ -35,12 +35,12 @@ export class TodoController {
 
   @Get()
   listTodo(@Param('userId') userId: string) {
-    return this.todoService.findAll();
+    return this.todoService.listAll(userId);
   }
 
   @Get(':itemId')
   getTodoItem(@Param('userId') userId: string, @Param('itemId') id: string) {
-    return this.todoService.findOne(+id);
+    return this.todoService.findItem(userId, id);
   }
 
   @Patch(':itemId')
@@ -49,11 +49,11 @@ export class TodoController {
     @Param('itemId') id: string,
     @Body() updateTodoDto: UpdateTodoDto,
   ) {
-    return this.todoService.update(+id, updateTodoDto);
+    return this.todoService.update(userId, updateTodoDto);
   }
 
   @Delete(':itemId')
   remove(@Param('userId') userId: string, @Param('itemId') id: string) {
-    return this.todoService.remove(+id);
+    return this.todoService.remove(userId, id);
   }
 }
