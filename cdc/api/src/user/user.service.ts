@@ -20,7 +20,7 @@ export class UserService {
 
   getUser(userId: string): User {
     if (!this.builtinUsers.has(userId)) {
-      throw new NotFoundException(`User[${userId}] not found.`);
+      return null;
     }
     return this.builtinUsers.get(userId);
   }

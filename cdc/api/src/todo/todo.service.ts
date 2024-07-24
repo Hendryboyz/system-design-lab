@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Todo } from './entities/todo.entities';
@@ -7,6 +7,7 @@ import { UserService } from '../user/user.service';
 
 @Injectable()
 export class TodoService {
+  private readonly logger = new Logger(this.constructor.name);
   constructor(
     @InjectRepository(Todo)
     private todoRepository: Repository<Todo>,
@@ -23,7 +24,10 @@ export class TodoService {
   }
 
   verifyUser(userId: string) {
-    this.userService.getUser(userId);
+    const user = this.userService.getUser(userId);
+    if (!user) {
+      throw new NotFoundException(`User[${userId}] not found.`);
+    }
   }
 
   async listAll(userId: string): Promise<Todo[]> {
@@ -37,12 +41,16 @@ export class TodoService {
 
   async findItem(userId: string, itemId: string): Promise<Todo> {
     this.verifyUser(userId);
-    return await this.todoRepository.findOne({
+    const targetItem = await this.todoRepository.findOne({
       where: {
         userId,
         todoId: itemId,
       }
     });
+    if (!targetItem) {
+      throw new NotFoundException(`Todo item[${itemId}] not found.`);
+    }
+    return targetItem;
   }
 
   async update(userId: string, updateTodoDto: UpdateTodoDto): Promise<Todo> {
@@ -54,12 +62,10 @@ export class TodoService {
     return await this.todoRepository.save(existedTodo);
   }
 
-  async remove(userId: string, itemId: string): Promise<number> {
+  async remove(userId: string, itemId: string): Promise<void> {
     this.verifyUser(userId);
-    const result = await this.todoRepository.delete({
-      userId: userId,
-      todoId: itemId,
-    });
-    return result.affected;
+    const deletingItem = await this.findItem(userId, itemId);
+    const deleted = await this.todoRepository.remove(deletingItem);
+    this.logger.debug(JSON.stringify(deleted));
   }
 }

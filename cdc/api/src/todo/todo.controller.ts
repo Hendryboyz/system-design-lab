@@ -3,6 +3,7 @@ import {
   Controller,
   Delete,
   Get,
+  HttpCode,
   HttpStatus,
   Param,
   Patch,
@@ -43,17 +44,17 @@ export class TodoController {
     return this.todoService.findItem(userId, id);
   }
 
-  @Patch(':itemId')
+  @Patch()
   update(
     @Param('userId') userId: string,
-    @Param('itemId') id: string,
     @Body() updateTodoDto: UpdateTodoDto,
   ) {
     return this.todoService.update(userId, updateTodoDto);
   }
 
   @Delete(':itemId')
-  remove(@Param('userId') userId: string, @Param('itemId') id: string) {
-    return this.todoService.remove(userId, id);
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async remove(@Param('userId') userId: string, @Param('itemId') id: string) {
+    await this.todoService.remove(userId, id);
   }
 }
