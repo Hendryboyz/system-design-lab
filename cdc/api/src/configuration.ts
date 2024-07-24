@@ -10,7 +10,9 @@ export const configuration = () => ({
   database: {
     type: 'postgres',
     host: process.env.DATABASE_HOST ?? 'localhost',
-    port: process.env.DATABASE_PORT ? parseInt(process.env.DATABASE_PORT) : 5432,
+    port: process.env.DATABASE_PORT
+      ? parseInt(process.env.DATABASE_PORT)
+      : 5432,
     username: process.env.DATABASE_USER ?? 'henrychou',
     password: process.env.DATABASE_PASSWORD ?? 'root123',
     database: process.env.DATABASE_NAME ?? 'dsebd-internal',
@@ -22,4 +24,13 @@ export const configuration = () => ({
     autoLoadEntities: true,
     synchronize: true || process.env.DATABASE_SYNCHRONIZE === 'true',
   },
+  queue: {
+    username: 'user',
+    password: 'bitnami',
+    hostname: 'localhost',
+    port: 5672,
+  },
+  cdc: {
+    queue: 'internal'
+  }
 });

@@ -10,7 +10,7 @@ interface User {
 @Injectable()
 export class UserService {
   private logger = new Logger(this.constructor.name);
-  private builtinUsers: Map<string,User> = new Map();
+  private builtinUsers: Map<string, User> = new Map();
   constructor() {
     this.logger.debug(JSON.stringify(users));
     users.forEach((user) => {

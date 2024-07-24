@@ -34,8 +34,8 @@ export class TodoService {
     this.verifyUser(userId);
     return await this.todoRepository.find({
       where: {
-        userId
-      }
+        userId,
+      },
     });
   }
 
@@ -45,7 +45,7 @@ export class TodoService {
       where: {
         userId,
         todoId: itemId,
-      }
+      },
     });
     if (!targetItem) {
       throw new NotFoundException(`Todo item[${itemId}] not found.`);
@@ -56,7 +56,9 @@ export class TodoService {
   async update(userId: string, updateTodoDto: UpdateTodoDto): Promise<Todo> {
     const existedTodo = await this.findItem(userId, updateTodoDto.itemId);
     if (!existedTodo) {
-      throw new NotFoundException(`Todo item[${updateTodoDto.itemId}] not found.`);
+      throw new NotFoundException(
+        `Todo item[${updateTodoDto.itemId}] not found.`,
+      );
     }
     existedTodo.content = updateTodoDto.content;
     return await this.todoRepository.save(existedTodo);

@@ -3,6 +3,7 @@ import { INestApplication, Logger, VersioningType } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { AppModule } from './app.module';
+import { CaptureDataChangeConsumer } from './consumer/cdc.consumer';
 
 const logger = new Logger('main');
 
@@ -56,5 +57,8 @@ async function bootstrap() {
   await app.listen(appPort, () => {
     logger.log(`Application started at port: ${appPort}`);
   });
+
+  const consumer = app.get(CaptureDataChangeConsumer);
+  await consumer.start();
 }
 bootstrap();

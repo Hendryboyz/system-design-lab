@@ -6,6 +6,7 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { configuration } from './configuration';
 import { TodoModule } from './todo/todo.module';
 import { UserModule } from './user/user.module';
+import { ConsumerModule } from './consumer/consumer.module';
 
 @Module({
   imports: [
@@ -26,6 +27,7 @@ import { UserModule } from './user/user.module';
     }),
     TodoModule,
     UserModule,
+    ConsumerModule,
   ],
   controllers: [AppController],
   providers: [AppService],
