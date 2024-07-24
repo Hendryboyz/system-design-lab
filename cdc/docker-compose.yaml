@@ -1,4 +1,17 @@
 services:
+  api:
+    profiles:
+      - demo
+    image: dsebd-demo-api
+    build:
+      context: ./api
+      tags:
+        - dsebd-demo-api:latest
+    environment:
+      NODE_ENV: production
+      APP_PORT: 8001
+    ports:
+      - '8001:8001'
   db:
     image: bitnami/postgresql:16.3.0-debian-12-r19
     restart: always
@@ -24,8 +37,9 @@ services:
     environment:
       - RABBITMQ_USERNAME=user
       - RABBITMQ_PASSWORD=bitnami
+      - RABBITMQ_SECURE_PASSWORD=no
       - RABBITMQ_MANAGEMENT_ALLOW_WEB_ACCESS=true
-      # - RABBITMQ_DEFINITIONS_FILE=/app/load_definition.json
+      - RABBITMQ_DEFINITIONS_FILE=/app/load_definition.json
     healthcheck:
       test: rabbitmq-diagnostics -q ping
       interval: 30s
@@ -34,8 +48,8 @@ services:
       start_period: 90s
     ports:
       - '15672:15672'
-    # volumes:
-    #   - ./local/rabbitmq_conf/definitions.json:/app/load_definition.json
+    volumes:
+      - ./local/rabbitmq_conf/definitions.json:/app/load_definition.json
   
   cdc_mechanism:
     image: quay.io/debezium/server:2.5

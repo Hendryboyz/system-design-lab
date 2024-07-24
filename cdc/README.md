@@ -2,7 +2,7 @@
 
 ## TODO
 * [X] Implement CRUD API
-* [ ] Capture data change in postgres
+* [X] Capture data change in postgres
 * [ ] Consumer to pull data change to sync database
 
 ## Future Work
