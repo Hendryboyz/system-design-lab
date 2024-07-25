@@ -2,7 +2,7 @@ import { Injectable, Logger, NotFoundException } from '@nestjs/common';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Todo } from './entities/todo.entities';
-import { CreateTodoDto, UpdateTodoDto } from './dto/todo.dto';
+import { CreateTodoDto, UpdateTodoDto, UpsertTodoDto } from './dto/todo.dto';
 import { UserService } from '../user/user.service';
 
 @Injectable()
@@ -14,11 +14,11 @@ export class TodoService {
     private userService: UserService,
   ) {}
 
-  create(userId: string, createTodoDto: CreateTodoDto) {
+  create(userId: string, dto: CreateTodoDto) {
     this.verifyUser(userId);
     const newTodo = this.todoRepository.create({
       userId,
-      content: createTodoDto.content,
+      content: dto.content,
     });
     return this.todoRepository.save(newTodo);
   }
@@ -53,14 +53,14 @@ export class TodoService {
     return targetItem;
   }
 
-  async update(userId: string, updateTodoDto: UpdateTodoDto): Promise<Todo> {
-    const existedTodo = await this.findItem(userId, updateTodoDto.itemId);
+  async update(userId: string, dto: UpdateTodoDto): Promise<Todo> {
+    const existedTodo = await this.findItem(userId, dto.itemId);
     if (!existedTodo) {
       throw new NotFoundException(
-        `Todo item[${updateTodoDto.itemId}] not found.`,
+        `Todo item[${dto.itemId}] not found.`,
       );
     }
-    existedTodo.content = updateTodoDto.content;
+    existedTodo.content = dto.content;
     return await this.todoRepository.save(existedTodo);
   }
 
@@ -69,5 +69,16 @@ export class TodoService {
     const deletingItem = await this.findItem(userId, itemId);
     const deleted = await this.todoRepository.remove(deletingItem);
     this.logger.debug(JSON.stringify(deleted));
+  }
+
+  async upsert(dto: UpsertTodoDto) {
+    const item = this.todoRepository.create({
+      todoId: dto.itemId,
+      ...dto,
+    });
+    this.logger.debug(JSON.stringify(item));
+    await this.todoRepository.upsert(item, {
+      conflictPaths: { todoId: true },
+    });
   }
 }

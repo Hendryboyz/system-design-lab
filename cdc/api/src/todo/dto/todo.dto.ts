@@ -16,3 +16,9 @@ export class UpdateTodoDto extends PartialType(CreateTodoDto) {
   @IsString()
   itemId: string;
 }
+
+export class UpsertTodoDto extends UpdateTodoDto {
+  userId: string;
+  createdAt: Date;
+  updatedAt: Date;
+}

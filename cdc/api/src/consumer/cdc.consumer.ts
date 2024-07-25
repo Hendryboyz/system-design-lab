@@ -77,7 +77,8 @@ export class CaptureDataChangeConsumer
     this.logger.debug(source);
     const factory = this.commandFactoryProvider.parseFactory(source);
     const command = factory.parseCommand(op);
-    command.execute(change.payload);
+    await command.execute(change.payload);
+    this.channel.ack(msg);
   }
 
   private parseMessage(msg: amqplib.ConsumeMessage) {

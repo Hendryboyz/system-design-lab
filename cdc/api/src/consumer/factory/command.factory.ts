@@ -1,7 +1,7 @@
 import { Logger } from "@nestjs/common";
 
 export interface Command {
-  execute(payload: any): void;
+  execute(payload: any): void | Promise<void>;
 }
 
 export abstract class CommandFactory {
@@ -13,6 +13,8 @@ export abstract class CommandFactory {
     switch(operation) {
       case 'c':
         return this.getCreateCommand();
+      case 'u':
+        return this.getUpdateCommand();
     }
     return;
   }

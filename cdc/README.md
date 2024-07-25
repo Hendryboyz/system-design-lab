@@ -4,6 +4,8 @@
 * [X] Implement CRUD API
 * [X] Capture data change in postgres
 * [X] Consumer to pull data change to sync database
+* [X] Structure the different command to sync database
+* [ ] Logic to sync create/update/delete command
 
 ## Future Work
 
