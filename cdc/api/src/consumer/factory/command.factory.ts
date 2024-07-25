@@ -1,4 +1,4 @@
-import { Logger } from "@nestjs/common";
+import { Logger } from '@nestjs/common';
 
 export interface Command {
   execute(payload: any): void | Promise<void>;
@@ -10,11 +10,16 @@ export abstract class CommandFactory {
 
   parseCommand(operation: string): Command {
     this.logger.debug(operation);
-    switch(operation) {
+    switch (operation) {
       case 'c':
         return this.getCreateCommand();
       case 'u':
         return this.getUpdateCommand();
+      case 'd':
+        return this.getDeleteCommand();
+      default:
+        this.logger.error(`Not support DB operation: ${operation}`);
+        return undefined;
     }
     return;
   }
@@ -22,5 +27,3 @@ export abstract class CommandFactory {
   abstract getUpdateCommand(): Command;
   abstract getDeleteCommand(): Command;
 }
-
-

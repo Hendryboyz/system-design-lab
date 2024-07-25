@@ -24,7 +24,7 @@ export class CaptureDataChangeConsumer
     private readonly commandFactoryProvider: CommandFactoryProvider,
   ) {}
 
-  onApplicationBootstrap() { }
+  onApplicationBootstrap() {}
 
   async start() {
     this.logger.log(`Capture data change consumer starting`);
@@ -34,17 +34,13 @@ export class CaptureDataChangeConsumer
         return Promise.all([
           ch.prefetch(1),
           ch.assertQueue(cdcQueue),
-          ch.bindQueue(
-            cdcQueue,
-            cdcQueue,
-            cdcQueue,
-          ),
+          ch.bindQueue(cdcQueue, cdcQueue, cdcQueue),
           ch.consume(cdcQueue, this.onMessage.bind(this)),
         ]);
       },
     });
     this.channel.on('connect', () => {
-      this.logger.debug(`Channel[${this.channel.name}] connected`) ;
+      this.logger.debug(`Channel[${this.channel.name}] connected`);
     });
 
     this.channel.on('error', (err, info) => {
@@ -76,17 +72,22 @@ export class CaptureDataChangeConsumer
 
     this.logger.debug(source);
     const factory = this.commandFactoryProvider.parseFactory(source);
-    const command = factory.parseCommand(op);
-    await command.execute(change.payload);
+    const syncCommand = factory.parseCommand(op);
+    if (!syncCommand) {
+      this.channel.ack(msg);
+      this.logger.warn(`No sync command to execute`, source);
+      return;
+    }
+    await syncCommand.execute(change.payload);
     this.channel.ack(msg);
   }
 
   private parseMessage(msg: amqplib.ConsumeMessage) {
-    const msgString = msg.content.toString();
+    const rawMessage = msg.content.toString();
     try {
-      return JSON.parse(msgString);
+      return JSON.parse(rawMessage);
     } catch (err) {
-      this.logger.error(`JSON parse failed, msg: ${msgString}`);
+      this.logger.error(`JSON parse failed, msg: ${rawMessage}`);
       return undefined;
     }
   }
