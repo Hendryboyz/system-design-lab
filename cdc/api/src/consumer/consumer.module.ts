@@ -1,8 +1,11 @@
 import { Logger, Module, Provider } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import * as amqp from 'amqp-connection-manager';
-import { PROVIDERS } from '../constants';
 import { CaptureDataChangeConsumer } from './cdc.consumer';
+import { CommandFactoryProvider } from './factory/command-factory.provider';
+import { TodoCommandFactory } from './factory/todo/todo-command.factory';
+import { TodoModule } from '../todo/todo.module';
+import { PROVIDERS } from '../constants';
 
 const connectionManagerFactory: Provider = {
   provide: PROVIDERS.AMQP_CONNECTION_MANAGER,
@@ -30,6 +33,14 @@ const connectionManagerFactory: Provider = {
 };
 
 @Module({
-  providers: [connectionManagerFactory, CaptureDataChangeConsumer],
+  imports: [
+    TodoModule,
+  ],
+  providers: [
+    connectionManagerFactory,
+    CaptureDataChangeConsumer,
+    CommandFactoryProvider,
+    TodoCommandFactory,
+  ],
 })
 export class ConsumerModule {}

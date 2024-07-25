@@ -8,7 +8,8 @@ import {
 import { ConfigService } from '@nestjs/config';
 import * as amqp from 'amqp-connection-manager';
 import * as amqplib from 'amqplib';
-import { PROVIDERS } from 'src/constants';
+import { CommandFactoryProvider } from './factory/command-factory.provider';
+import { PROVIDERS } from '../constants';
 
 @Injectable()
 export class CaptureDataChangeConsumer
@@ -20,6 +21,7 @@ export class CaptureDataChangeConsumer
     private readonly config: ConfigService,
     @Inject(PROVIDERS.AMQP_CONNECTION_MANAGER)
     private readonly acm: amqp.AmqpConnectionManager,
+    private readonly commandFactoryProvider: CommandFactoryProvider,
   ) {}
 
   onApplicationBootstrap() { }
@@ -65,21 +67,17 @@ export class CaptureDataChangeConsumer
       this.channel.ack(msg);
       return;
     }
-    const {
-      source,
-      before,
-      after,
-      op,
-      ts_ms,
-      transaction
-    } = change.payload;
+    const { source, op } = change.payload;
 
     if (!source || !op) {
       this.channel.ack(msg);
       return;
     }
-    
+
     this.logger.debug(source);
+    const factory = this.commandFactoryProvider.parseFactory(source);
+    const command = factory.parseCommand(op);
+    command.execute(change.payload);
   }
 
   private parseMessage(msg: amqplib.ConsumeMessage) {
