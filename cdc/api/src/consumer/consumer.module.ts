@@ -16,7 +16,7 @@ const connectionManagerFactory: Provider = {
       username: config.get<string>('queue.username'),
       password: config.get<string>('queue.password'),
       port: config.get<number>('queue.port'),
-    }
+    };
     const amqpUrl = `amqp://${amqpConfig.username}:${amqpConfig.password}@${amqpConfig.hostname}:${amqpConfig.port}`;
     const connection = amqp
       .connect([amqpUrl])
@@ -33,9 +33,7 @@ const connectionManagerFactory: Provider = {
 };
 
 @Module({
-  imports: [
-    TodoModule,
-  ],
+  imports: [TodoModule],
   providers: [
     connectionManagerFactory,
     CaptureDataChangeConsumer,

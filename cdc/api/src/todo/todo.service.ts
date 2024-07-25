@@ -56,9 +56,7 @@ export class TodoService {
   async update(userId: string, dto: UpdateTodoDto): Promise<Todo> {
     const existedTodo = await this.findItem(userId, dto.itemId);
     if (!existedTodo) {
-      throw new NotFoundException(
-        `Todo item[${dto.itemId}] not found.`,
-      );
+      throw new NotFoundException(`Todo item[${dto.itemId}] not found.`);
     }
     existedTodo.content = dto.content;
     return await this.todoRepository.save(existedTodo);

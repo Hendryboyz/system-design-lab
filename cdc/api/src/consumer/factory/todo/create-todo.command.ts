@@ -1,6 +1,6 @@
-import { Logger } from "@nestjs/common";
-import { TodoService } from "../../../todo/todo.service";
-import { Command } from "../command.factory";
+import { Logger } from '@nestjs/common';
+import { TodoService } from '../../../todo/todo.service';
+import { Command } from '../command.factory';
 
 export class CreateTodoCommand implements Command {
   private logger = new Logger(this.constructor.name);

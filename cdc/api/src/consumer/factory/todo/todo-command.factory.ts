@@ -1,15 +1,13 @@
-import { Injectable } from "@nestjs/common";
-import { TodoService } from "../../../todo/todo.service";
-import { Command, CommandFactory } from "../command.factory";
-import { CreateTodoCommand } from "./create-todo.command";
-import { UpdateTodoCommand } from "./update-todo.command";
-import { DeleteTodoCommand } from "./delete-todo.command";
+import { Injectable } from '@nestjs/common';
+import { TodoService } from '../../../todo/todo.service';
+import { Command, CommandFactory } from '../command.factory';
+import { CreateTodoCommand } from './create-todo.command';
+import { UpdateTodoCommand } from './update-todo.command';
+import { DeleteTodoCommand } from './delete-todo.command';
 
 @Injectable()
 export class TodoCommandFactory extends CommandFactory {
-  constructor(
-    private readonly todoService: TodoService,
-  ) {
+  constructor(private readonly todoService: TodoService) {
     super();
   }
   getCreateCommand(): Command {
@@ -21,5 +19,4 @@ export class TodoCommandFactory extends CommandFactory {
   getDeleteCommand(): Command {
     return new DeleteTodoCommand(this.todoService);
   }
-  
 }

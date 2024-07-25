@@ -19,12 +19,10 @@ type CdcSource = {
 
 @Injectable()
 export class CommandFactoryProvider {
-  constructor(
-    private readonly todoFactory: TodoCommandFactory,
-  ) {}
+  constructor(private readonly todoFactory: TodoCommandFactory) {}
 
   parseFactory(source: CdcSource): CommandFactory {
-    switch(source.table) {
+    switch (source.table) {
       case 'todo':
         return this.todoFactory;
     }

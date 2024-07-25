@@ -31,6 +31,6 @@ export const configuration = () => ({
     port: 5672,
   },
   cdc: {
-    queue: 'internal'
-  }
+    queue: 'internal',
+  },
 });
