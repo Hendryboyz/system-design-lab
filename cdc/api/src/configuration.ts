@@ -15,22 +15,22 @@ export const configuration = () => ({
       : 5432,
     username: process.env.DATABASE_USER ?? 'henrychou',
     password: process.env.DATABASE_PASSWORD ?? 'root123',
-    database: process.env.DATABASE_NAME ?? 'dsebd-internal',
+    database: process.env.DATABASE_NAME ?? 'dsebd-demo',
     /**
      * use auto load entities to avoid breaking module boundary
      * https://docs.nestjs.com/techniques/database#auto-load-entities
      */
     // entities: [ Identity, User ],
     autoLoadEntities: true,
-    synchronize: true || process.env.DATABASE_SYNCHRONIZE === 'true',
+    synchronize: process.env.DATABASE_SYNCHRONIZE === 'true',
   },
   queue: {
-    username: 'user',
-    password: 'bitnami',
-    hostname: 'localhost',
-    port: 5672,
+    username: process.env.QUEUE_USERNAME ?? 'user',
+    password: process.env.QUEUE_PASSWORD ?? 'bitnami',
+    hostname: process.env.QUEUE_HOSTNAME ?? 'localhost',
+    port: process.env.QUEUE_PORT ? parseInt(process.env.QUEUE_PORT) : 5672,
   },
   cdc: {
-    queue: 'internal',
+    queue: process.env.CDC_QUEUE ?? 'internal',
   },
 });

@@ -12,6 +12,7 @@ import { ConsumerModule } from './consumer/consumer.module';
   imports: [
     ConfigModule.forRoot({
       load: [configuration],
+      envFilePath: ['configs/.env'],
       isGlobal: true,
       cache: true,
     }),

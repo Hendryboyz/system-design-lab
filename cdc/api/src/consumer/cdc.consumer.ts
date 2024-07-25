@@ -33,7 +33,8 @@ export class CaptureDataChangeConsumer
       setup: (ch: amqplib.ConfirmChannel) => {
         return Promise.all([
           ch.prefetch(1),
-          ch.assertQueue(cdcQueue),
+          // ch.assertExchange(cdcQueue, 'direct', { durable: true }),
+          ch.assertQueue(cdcQueue, { durable: true }),
           ch.bindQueue(cdcQueue, cdcQueue, cdcQueue),
           ch.consume(cdcQueue, this.onMessage.bind(this)),
         ]);
