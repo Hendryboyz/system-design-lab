@@ -11,3 +11,5 @@ kustomize edit set image app_image="hendryboyz/demo-api-dsebd:$VERSION_NUMBER"
 kustomize build | kubectl apply -f -
 # kustomize build > deploy.yaml
 popd
+
+# minikube service -n infra rabbitmq-nodeport-service --url

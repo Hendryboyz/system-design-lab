@@ -6,7 +6,7 @@ VERSION_NUMBER=$(grep version $SOURCE_DIR/package.json | head -1 | awk -F: '{pri
 
 echo "==== Start to build api image version: $VERSION_NUMBER ===="
 
-docker build -t "dsebd-demo-api:$VERSION_NUMBER" api/
+docker build --no-cache -t "dsebd-demo-api:$VERSION_NUMBER" api/
 docker image tag "dsebd-demo-api:$VERSION_NUMBER" "dsebd-demo-api:latest"
 docker image tag "dsebd-demo-api:$VERSION_NUMBER" "hendryboyz/demo-api-dsebd:$VERSION_NUMBER"
 docker image tag "dsebd-demo-api:$VERSION_NUMBER" hendryboyz/demo-api-dsebd:latest
