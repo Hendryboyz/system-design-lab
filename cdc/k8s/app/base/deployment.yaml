@@ -22,11 +22,11 @@ spec:
           readinessProbe:
             httpGet:
               port: http
-              path: /v1
+              path: /dsebd/api/health
           livenessProbe:
             httpGet:
               port: http
-              path: /v1
+              path: /dsebd/api/health
           resources:
             requests:
               cpu: 100m
