@@ -39,11 +39,9 @@ export class TodoService {
     });
   }
 
-  async findItem(userId: string, itemId: string): Promise<Todo> {
-    this.verifyUser(userId);
+  async findItem(itemId: string): Promise<Todo> {
     const targetItem = await this.todoRepository.findOne({
       where: {
-        userId,
         todoId: itemId,
       },
     });
@@ -54,7 +52,8 @@ export class TodoService {
   }
 
   async update(userId: string, dto: UpdateTodoDto): Promise<Todo> {
-    const existedTodo = await this.findItem(userId, dto.itemId);
+    this.verifyUser(userId);
+    const existedTodo = await this.findItem(dto.itemId);
     if (!existedTodo) {
       throw new NotFoundException(`Todo item[${dto.itemId}] not found.`);
     }
@@ -64,7 +63,11 @@ export class TodoService {
 
   async remove(userId: string, itemId: string): Promise<void> {
     this.verifyUser(userId);
-    const deletingItem = await this.findItem(userId, itemId);
+    await this.removeById(itemId);
+  }
+
+  async removeById(itemId: string): Promise<void> {
+    const deletingItem = await this.findItem(itemId);
     const deleted = await this.todoRepository.remove(deletingItem);
     this.logger.debug(JSON.stringify(deleted));
   }

@@ -12,8 +12,8 @@ export class CreateTodoCommand implements Command {
       itemId: after.todo_id,
       userId: after.user_id,
       content: after.content,
-      createdAt: new Date(after.created_at),
-      updatedAt: new Date(after.updated_at),
+      createdAt: new Date(after.created_at / 1000),
+      updatedAt: new Date(after.updated_at / 1000),
     });
   }
 }

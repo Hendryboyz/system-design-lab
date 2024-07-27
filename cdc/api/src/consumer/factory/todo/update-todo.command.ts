@@ -8,9 +8,13 @@ export class UpdateTodoCommand implements Command {
   async execute(payload: any): Promise<void> {
     this.logger.debug(`Patch todo item: `, JSON.stringify(payload));
     const { after } = payload;
-    await this.todoService.update(after.userId, {
-      itemId: after.todo_id,
-      content: after.content,
-    });
+    try {
+      await this.todoService.update(after.user_id, {
+        itemId: after.todo_id,
+        content: after.content,
+      });
+    } catch(error) {
+      this.logger.error(error);
+    }
   }
 }

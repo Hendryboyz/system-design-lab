@@ -41,7 +41,7 @@ export class TodoController {
 
   @Get(':itemId')
   getTodoItem(@Param('userId') userId: string, @Param('itemId') id: string) {
-    return this.todoService.findItem(userId, id);
+    return this.todoService.findItem(id);
   }
 
   @Patch()
