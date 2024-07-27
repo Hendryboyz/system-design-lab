@@ -8,6 +8,10 @@ export class DeleteTodoCommand implements Command {
   async execute(payload: any): Promise<void> {
     this.logger.debug(`Delete todo item: `, JSON.stringify(payload));
     const { before } = payload;
-    await this.todoService.removeById(before.todo_id);
+    try {
+      await this.todoService.removeById(before.todo_id);
+    } catch(error) {
+      this.logger.error(error);
+    }
   }
 }
