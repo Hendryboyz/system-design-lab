@@ -1,0 +1,66 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: db-cdc-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: db-cdc
+  template:
+    metadata:
+      labels:
+        app: db-cdc
+    spec:
+      containers:
+      - name: postgresql
+        image: bitnami/postgresql:16.3.0-debian-12-r19
+        ports:
+        - containerPort: 5432
+        env:
+        - name: POSTGRESQL_USERNAME
+          value: "henrychou"
+        - name: POSTGRESQL_PASSWORD
+          value: "root123"
+        - name: POSTGRESQL_POSTGRES_PASSWORD
+          value: "admin"
+        - name: POSTGRESQL_DATABASE
+          value: "dsebd-demo"
+        - name: POSTGRESQL_WAL_LEVEL
+          value: "logical"
+        volumeMounts:
+        - name: postgresql-data
+          mountPath: /bitnami/postgresql
+        livenessProbe:
+          exec:
+            command:
+            - pg_isready
+            - -U
+            - henrychou
+          initialDelaySeconds: 30
+          periodSeconds: 5
+          timeoutSeconds: 5
+          failureThreshold: 5
+      - name: debezium
+        image: quay.io/debezium/server:2.5
+        ports:
+        - containerPort: 8080
+        volumeMounts:
+        - name: debezium-config
+          mountPath: /debezium/conf
+          readOnly: true
+        livenessProbe:
+          httpGet:
+            path: /q/health
+            port: 8080
+          initialDelaySeconds: 30
+          periodSeconds: 5
+          timeoutSeconds: 5
+          failureThreshold: 5
+      volumes:
+      - name: postgresql-data
+        persistentVolumeClaim:
+          claimName: postgresql-pvc
+      - name: debezium-config
+        configMap:
+          name: debezium-config

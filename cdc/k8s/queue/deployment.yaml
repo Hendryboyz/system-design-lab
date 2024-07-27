@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: rabbitmq-deployment
+  labels:
+    app: rabbitmq
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: rabbitmq
+  template:
+    metadata:
+      labels:
+        app: rabbitmq
+    spec:
+      containers:
+      - name: rabbitmq
+        image: bitnami/rabbitmq:3.13.4-debian-12-r1
+        ports:
+        - containerPort: 5672
+        - containerPort: 15672
+        env:
+        - name: RABBITMQ_USERNAME
+          value: "user"
+        - name: RABBITMQ_PASSWORD
+          value: "bitnami"
+        - name: RABBITMQ_SECURE_PASSWORD
+          value: "no"
+        - name: RABBITMQ_MANAGEMENT_ALLOW_WEB_ACCESS
+          value: "true"
+        volumeMounts:
+        - name: data
+          mountPath: /bitnami/rabbitmq/mnesia
+        livenessProbe:
+          exec:
+            command:
+            - rabbitmq-diagnostics
+            - -q
+            - ping
+          initialDelaySeconds: 90
+          periodSeconds: 30
+          timeoutSeconds: 10
+          failureThreshold: 5
+      volumes:
+      - name: data
+        persistentVolumeClaim:
+          claimName: rabbitmq-data-pvc
