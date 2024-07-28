@@ -2,6 +2,7 @@ import { NestFactory } from '@nestjs/core';
 import { INestApplication, Logger, VersioningType } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import * as cookieParser from 'cookie-parser';
 import { AppModule } from './app.module';
 import { CaptureDataChangeConsumer } from './consumer/cdc.consumer';
 
@@ -43,6 +44,7 @@ async function bootstrap() {
       ? ['error', 'warn', 'log']
       : ['error', 'warn', 'log', 'debug', 'verbose'],
   );
+  app.use(cookieParser());
 
   const enableOpenAPI = configService.get<boolean>('app.openAPI.enable');
   if (enableOpenAPI) {

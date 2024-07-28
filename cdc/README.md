@@ -10,7 +10,7 @@
 ### Criteria
 
 1. [X] redirect to other url via middleware and end the original req/res cycle
-2. [ ]
+2. [X] cookie header validate and parse
 3. [X] `GET` request verify `refer` header
 4. [X] `GET` request add `from` to header
 5. [X] `PUT`/`POST` remove all url query strings
@@ -26,3 +26,4 @@
 * [ ] Create exchange, queue than bind queue after rabbitmq init finished
 * [ ] Study how to use debezium connector to sync internal/external postgres to avoid implementing consumer
 * [ ] CDC consumer have to poll message in order. separate the consumer to isolated deployment to allow api to scale
+* [ ] Refine middleware dependencies
