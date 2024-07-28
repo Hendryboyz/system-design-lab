@@ -17,6 +17,7 @@ import { RefererVerificationMiddleware } from '../middlewares/referer-verificati
   exports: [TodoService],
 })
 export class TodoModule implements NestModule {
+  private readonly todoBasicRoute = '*/users/*/todo*';
   configure(consumer: MiddlewareConsumer) {
     consumer
       .apply(
@@ -25,30 +26,30 @@ export class TodoModule implements NestModule {
       )
       .forRoutes(
         {
-          path: '*', method: RequestMethod.GET,
-        }
+          path: this.todoBasicRoute, method: RequestMethod.GET,
+        },
       );
     consumer
       .apply(
         RemoveQueryMiddleware,
-        HeaderVerificationMiddleware
+        HeaderVerificationMiddleware,
       )
       .forRoutes(
         {
-          path: '*', method: RequestMethod.PUT,
+          path: this.todoBasicRoute, method: RequestMethod.PUT,
         },
         {
-          path: '*', method: RequestMethod.POST,
+          path: this.todoBasicRoute, method: RequestMethod.POST,
         },
         {
-          path: '*', method: RequestMethod.PATCH,
+          path: this.todoBasicRoute, method: RequestMethod.PATCH,
         },
       );
     consumer
       .apply(DeleteAgentMiddleware)
       .forRoutes(
         {
-          path: '*', method: RequestMethod.DELETE,
+          path: this.todoBasicRoute, method: RequestMethod.DELETE,
         },
       );
   }
