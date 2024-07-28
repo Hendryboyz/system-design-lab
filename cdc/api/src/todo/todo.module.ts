@@ -40,6 +40,9 @@ export class TodoModule implements NestModule {
         {
           path: '*', method: RequestMethod.POST,
         },
+        {
+          path: '*', method: RequestMethod.PATCH,
+        },
       );
     consumer
       .apply(DeleteAgentMiddleware)

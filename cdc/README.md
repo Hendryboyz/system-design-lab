@@ -13,7 +13,7 @@
 2. [ ]
 3. [X] `GET` request verify `refer` header
 4. [X] `GET` request add `from` to header
-5. [ ]
+5. [X] `PUT`/`POST` remove all url query strings
 6. [X] `PUT`/`POST` agent verification
 7. [X] `PUT`/`POST` request format verification
 8. [X] use config to control the agent allowing to `DELETE` resources
