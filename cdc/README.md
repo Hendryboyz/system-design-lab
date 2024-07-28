@@ -5,7 +5,21 @@
 * [X] Capture data change in postgres
 * [X] Consumer to pull data change to sync database
 * [X] Structure the different command to sync database
-* [ ] Logic to sync create/update/delete command
+* [X] Logic to sync create/update/delete command
+
+### Criteria
+
+1. [ ]
+2. [ ]
+3. [X] `GET` request verify `refer` header
+4. [X] `GET` request add `from` to header
+5. [ ]
+6. [X] `PUT`/`POST` agent verification
+7. [X] `PUT`/`POST` request format verification
+8. [X] use config to control the agent allowing to `DELETE` resources
+9. [X] add timestamp to all http request
+10. [X] limit request domain
+
 
 ## Future Work
 

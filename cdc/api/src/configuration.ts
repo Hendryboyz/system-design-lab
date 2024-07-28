@@ -6,6 +6,9 @@ export const configuration = () => ({
       basename: process.env.OPENAPI_BASENAME ?? '',
       enable: process.env.NODE_ENV === 'production' ? false : true,
     },
+    enableDeleteAgentVerification: true,
+    allowDeleteAgents: ['AGENT_1', 'AGENT_2'],
+    hostVerification: false,
   },
   database: {
     type: 'postgres',
