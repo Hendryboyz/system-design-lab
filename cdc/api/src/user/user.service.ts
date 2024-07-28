@@ -24,4 +24,12 @@ export class UserService {
     }
     return this.builtinUsers.get(userId);
   }
+
+  getAllUsers(): User[] {
+    const users: User[] = [];
+    for (const u of this.builtinUsers.values()) {
+      users.push(u);
+    }
+    return users;
+  }
 }

@@ -9,7 +9,7 @@
 
 ### Criteria
 
-1. [ ]
+1. [X] redirect to other url via middleware and end the original req/res cycle
 2. [ ]
 3. [X] `GET` request verify `refer` header
 4. [X] `GET` request add `from` to header
