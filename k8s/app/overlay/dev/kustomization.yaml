@@ -9,4 +9,4 @@ resources:
 images:
 - name: app_image
   newName: hendryboyz/demo-api-dsebd
-  newTag: 0.0.1
+  newTag: 0.1.0
