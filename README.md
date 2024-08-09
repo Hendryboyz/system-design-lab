@@ -23,9 +23,15 @@
 
 ## Future Work
 
+### Infra
+
 * [ ] Create exchange, queue than bind queue after rabbitmq init finished
+* [ ] How to expose internal RabbitMQ without portforward or node port
 * [ ] Study how to use debezium connector to sync internal/external postgres to avoid implementing consumer
 * [ ] CDC consumer have to poll message in order. separate the consumer to isolated deployment to allow api to scale
+
+### Code
+
 * [ ] Need a mechanism to avoid duplicated operation
   * Differential Synchronization
 * [ ] Refine middleware dependencies
