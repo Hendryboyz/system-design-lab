@@ -26,5 +26,6 @@
 * [ ] Create exchange, queue than bind queue after rabbitmq init finished
 * [ ] Study how to use debezium connector to sync internal/external postgres to avoid implementing consumer
 * [ ] CDC consumer have to poll message in order. separate the consumer to isolated deployment to allow api to scale
-* [ ] Need a mechanism to avoid creating duplicated
+* [ ] Need a mechanism to avoid duplicated operation
+  * Differential Synchronization
 * [ ] Refine middleware dependencies
